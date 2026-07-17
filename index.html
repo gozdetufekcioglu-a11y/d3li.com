@@ -22,7 +22,7 @@
             align-items: center;
         }
 
-        /* Orijinal Görseli Merkeze Alan Wrapper */
+        /* Orijinal Görseli Merkeze Alan Ana Ekran */
         .wrapper {
             position: relative;
             width: 100vw;
@@ -36,7 +36,7 @@
             background-position: center;
         }
 
-        /* Sol Alt Büyük %87 Sayacı Görseldeki Yerine Hizalama */
+        /* Sol Alt Büyük %87 Sayacı */
         .system-status-mask {
             position: absolute;
             bottom: 25.5%; 
@@ -96,8 +96,8 @@
             font-family: 'Arial Black', sans-serif;
         }
 
-        /* Sol Ortadaki Dinamik Terminal & Pop-up Paneli */
-        .cyber-modal {
+        /* Sol Ortadaki Yeşil Terminal Alanı (Yalnızca Loglar İçin) */
+        .cyber-terminal {
             position: absolute;
             bottom: 24.5%;
             left: 5.9%;
@@ -108,7 +108,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            z-index: 10;
+            z-index: 5;
         }
 
         .log-line {
@@ -125,21 +125,24 @@
             font-weight: bold;
         }
 
-        /* Pop-up Bölümü */
+        /* [KRİTİK DÜZELTME] Pop-up Artık Ekranın Tam Ortasında Bağımsız */
         .system-standby-content {
             display: none;
             text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            background-color: rgba(5, 12, 5, 0.95);
+            transform: translate(-50%, -50%); /* Tam merkezleme */
+            width: 32vw;
+            max-width: 480px;
+            background-color: rgba(5, 12, 5, 0.98);
             border: 2px solid #ffcc00;
-            padding: 20px;
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+            padding: 25px;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
             border-radius: 4px;
+            z-index: 999; /* En üstte durması için */
             animation: fadeIn 0.4s ease-in-out forwards;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         .standby-header {
@@ -147,21 +150,21 @@
             font-weight: bold;
             font-size: 1.1vw;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .standby-desc {
             color: #88af88;
-            font-size: 0.8vw;
+            font-size: 0.85vw;
             line-height: 1.4;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .join-btn {
             background-color: transparent;
             border: 1px solid #39ff14;
             color: #39ff14;
-            padding: 8px 20px;
+            padding: 8px 22px;
             font-family: inherit;
             font-size: 0.8vw;
             font-weight: bold;
@@ -186,7 +189,7 @@
             .progress-percentage { font-size: 20px; }
             .log-line { font-size: 14px; }
             .standby-header { font-size: 16px; }
-            .standby-desc { font-size: 12px; }
+            .standby-desc { font-size: 13px; }
             .join-btn { font-size: 13px; }
         }
     </style>
@@ -194,31 +197,36 @@
 <body>
 
     <div class="wrapper">
+        <!-- Büyük %87 Maskesi -->
         <div class="system-status-mask">
             <div class="system-status-percentage" id="status-num">0%</div>
         </div>
 
+        <!-- Progress Bar Dolgusu -->
         <div class="progress-mask-container">
             <div class="progress-bar" id="fill-bar"></div>
         </div>
 
+        <!-- Küçük Yüzde Maskesi -->
         <div class="progress-percentage-mask">
             <div class="progress-percentage" id="progress-num">0%</div>
         </div>
 
-        <div class="cyber-modal" id="modal-box">
+        <!-- Sol Alt Terminal Log Alanı -->
+        <div class="cyber-terminal">
             <div id="terminal-logs">
                 <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
                 <div class="log-line" id="log2"><span>> Loading Tarot Engine...</span><span class="log-status">[100%]</span></div>
                 <div class="log-line" id="log3"><span>> Loading 22 Tarot Cards...</span><span class="log-status">[100%]</span></div>
                 <div class="log-line" id="log4"><span>> Establishing Connection...</span><span class="log-status">[...]</span></div>
             </div>
+        </div>
 
-            <div class="system-standby-content" id="standby-screen">
-                <div class="standby-header">⚠️ CONNECTION LOST // SYSTEM STANDBY</div>
-                <div class="standby-desc">Tarot servers are currently under active development. d3li has not opened its gates yet.</div>
-                <button class="join-btn" onclick="window.open('https://discord.gg/d3licom', '_blank')">JOIN COMMUNITY</button>
-            </div>
+        <!-- Ekranın Tam Ortasında Açılacak Sarı Pop-up -->
+        <div class="system-standby-content" id="standby-screen">
+            <div class="standby-header">⚠️ CONNECTION LOST // SYSTEM STANDBY</div>
+            <div class="standby-desc">Tarot servers are currently under active development. d3li has not opened its gates yet.</div>
+            <button class="join-btn" onclick="window.open('https://discord.gg/d3licom', '_blank')">JOIN COMMUNITY</button>
         </div>
     </div>
 
@@ -228,23 +236,24 @@
             const progressNum = document.getElementById('progress-num');
             const fillBar = document.getElementById('fill-bar');
             const standbyScreen = document.getElementById('standby-screen');
-            const terminalLogs = document.getElementById('terminal-logs');
 
             let currentPercent = 0;
             const targetPercent = 87;
             const duration = 2400; 
             const intervalTime = duration / targetPercent;
 
+            // Logların sırayla akması
             setTimeout(() => { document.getElementById('log1').style.display = 'flex'; }, 300);
             setTimeout(() => { document.getElementById('log2').style.display = 'flex'; }, 800);
             setTimeout(() => { document.getElementById('log3').style.display = 'flex'; }, 1400);
             setTimeout(() => { document.getElementById('log4').style.display = 'flex'; }, 1900);
 
+            // Sayaç döngüsü
             const interval = setInterval(() => {
                 if (currentPercent >= targetPercent) {
                     clearInterval(interval);
+                    // %87'de çakılınca bağımsız pop-up ortada belirir
                     setTimeout(() => {
-                        terminalLogs.style.display = 'none';
                         standbyScreen.style.display = 'block';
                     }, 500);
                 } else {
