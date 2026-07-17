@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>d3li - Draw Your Card. Write Your Path.</title>
     <style>
         * {
@@ -10,124 +10,118 @@
             margin: 0;
             padding: 0;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body, html {
             width: 100%;
             height: 100%;
-            background-color: #030403;
+            background-color: #000000;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .wrapper {
+        /* [MOBİL UYGULAMA KASASI] Telefon ekranları için dikey oran kilitli alan */
+        .phone-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            max-width: 1536px;
-            max-height: 1024px;
-            aspect-ratio: 1536 / 1024;
+            max-width: 480px; /* Standart üst seviye mobil genişlik sınırı */
+            max-height: 920px;
             background-image: url('bg.jpeg'); 
-            background-size: contain;
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
         }
 
-        /* Sol Alt Büyük Sayaç Maskesi */
+        /* Sabit Büyük %87 Sayacı */
         .system-status-mask {
             position: absolute;
             bottom: 25.5%; 
             left: 33.5%;
-            width: 10%;
-            height: 9%;
-            background-color: #050b05;
+            width: 12%;
+            height: 6%;
             display: flex;
             align-items: center;
             justify-content: flex-end;
+            z-index: 6;
         }
 
         .system-status-percentage {
-            font-size: 3.5vw;
+            font-size: 5.5vw;
             font-weight: 900;
             color: #39ff14;
-            text-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.8);
             font-family: 'Arial Black', sans-serif;
-            letter-spacing: -2px;
+            letter-spacing: -1px;
             line-height: 1;
         }
 
-        /* Alt Progress Bar */
+        /* Sabit Alt Progress Bar */
         .progress-mask-container {
             position: absolute;
-            bottom: 18.2%; 
-            left: 5.9%;
-            width: 32.7%; 
-            height: 1.8vh;
-            max-height: 18px;
-            background-color: #040904;
-            border-radius: 1px;
+            bottom: 18.5%; 
+            left: 6%;
+            width: 32.5%; 
+            height: 1.2vh;
             overflow: hidden;
+            z-index: 6;
         }
 
         .progress-bar {
-            width: 0%;
+            width: 87%; /* Sayaç doğrudan %87'de sabit */
             height: 100%;
             background: linear-gradient(90deg, #103f10, #39ff14);
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.9);
-            transition: width 0.04s linear;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.9);
         }
 
-        /* Sağdaki Küçük Sayaç Maskesi */
+        /* Sabit Sağdaki Küçük Yüzde */
         .progress-percentage-mask {
             position: absolute;
-            bottom: 17.5%;
-            left: 44.1%;
-            width: 4%;
-            height: 3%;
-            background-color: #030403;
+            bottom: 17.8%;
+            left: 44.5%;
+            width: 6%;
+            height: 2.5%;
             display: flex;
             align-items: center;
             justify-content: flex-start;
+            z-index: 6;
         }
 
         .progress-percentage {
             color: #39ff14;
-            font-size: 1.3vw;
+            font-size: 2.2vw;
             font-weight: bold;
             font-family: 'Arial Black', sans-serif;
         }
 
-        /* Ortadaki Dinamik Terminal & Pop-up Paneli */
-        .cyber-modal {
+        /* Orijinal Çerçevenin İçine Oturan Sabit Terminal */
+        .cyber-static-panel {
             position: absolute;
-            top: 48%;
-            left: 54%;
-            transform: translate(-50%, -50%);
-            width: 30vw;
-            max-width: 460px;
-            min-height: 180px;
-            background-color: rgba(5, 12, 5, 0.95);
-            border: 2px solid #1f4d1f;
-            padding: 20px;
+            bottom: 24.5%;
+            left: 6%;
+            width: 38%;
+            height: 25%;
+            padding: 8px;
             font-family: 'Courier New', Courier, monospace;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-radius: 4px;
-            z-index: 10;
+            flex-flex-direction: column;
+            justify-content: flex-start;
+            z-index: 5;
         }
 
-        /* Satır satır akan loglar */
+        /* Log Satırları (Doğrudan görünür ve sabit) */
         .log-line {
             color: #39ff14;
-            font-size: 0.95vw;
-            margin-bottom: 6px;
+            font-size: 1.5vw;
+            margin-bottom: 4px;
             white-space: nowrap;
             overflow: hidden;
-            display: none;
+            display: flex;
             justify-content: space-between;
         }
 
@@ -135,30 +129,40 @@
             font-weight: bold;
         }
 
-        /* Final Uyarı Ekranı Tasarımı (Videodakiyle Birebir) */
+        /* [HAREKETLİ POP-UP] Telefondaki çerçevenin tam ortasından büyüyerek açılan efekt */
         .system-standby-content {
             display: none;
             text-align: center;
-            animation: fadeIn 0.4s ease-in-out forwards;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7); /* Başlangıçta küçük */
+            width: 88vw;
+            max-width: 380px;
+            background-color: rgba(5, 12, 5, 0.98); 
+            border: 2px solid #ffcc00;  
+            padding: 25px 20px;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+            border-radius: 6px;
+            z-index: 99999;
+            font-family: 'Courier New', Courier, monospace;
+            opacity: 0;
+            animation: popUpEntrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; /* Siber akıcı açılış */
         }
 
         .standby-header {
             color: #ffcc00;
             font-weight: bold;
-            font-size: 1.1vw;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+            font-size: 3.8vw;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
         }
 
         .standby-desc {
             color: #88af88;
-            font-size: 0.85vw;
-            line-height: 1.5;
+            font-size: 2.8vw;
+            line-height: 1.4;
             margin-bottom: 20px;
         }
 
@@ -168,117 +172,78 @@
             color: #39ff14;
             padding: 10px 24px;
             font-family: inherit;
-            font-size: 0.9vw;
+            font-size: 3vw;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            border-radius: 4px;
         }
 
-        .join-btn:hover {
+        .join-btn:hover, .join-btn:active {
             background-color: #39ff14;
             color: #000;
             box-shadow: 0 0 15px #39ff14;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Giriş Animasyon Efekti */
+        @keyframes popUpEntrance {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1); /* Tam boyutuna esneyerek gelir */
+            }
         }
 
-        @media (min-width: 1536px) {
-            .system-status-percentage { font-size: 54px; }
-            .progress-percentage { font-size: 20px; }
-            .log-line { font-size: 14px; }
+        /* Masaüstü Ekranlarında Mobil Görünümü Korumak İçin Font Oranlaması */
+        @media (min-width: 480px) {
+            .system-status-percentage { font-size: 24px; }
+            .progress-percentage { font-size: 11px; }
+            .log-line { font-size: 8px; }
             .standby-header { font-size: 16px; }
-            .standby-desc { font-size: 13px; }
-            .join-btn { font-size: 14px; }
+            .standby-desc { font-size: 12px; }
+            .join-btn { font-size: 13px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <!-- Sol alt yüzdelik maske -->
+    <div class="phone-container">
+        
         <div class="system-status-mask">
-            <div class="system-status-percentage" id="status-num">0%</div>
+            <div class="system-status-percentage">87%</div>
         </div>
 
-        <!-- İlerleme barı -->
         <div class="progress-mask-container">
-            <div class="progress-bar" id="fill-bar"></div>
+            <div class="progress-bar"></div>
         </div>
 
-        <!-- Sağdaki küçük yüzdelik maske -->
         <div class="progress-percentage-mask">
-            <div class="progress-percentage" id="progress-num">0%</div>
+            <div class="progress-percentage">87%</div>
         </div>
 
-        <!-- Ortadaki Akıllı Terminal Kutusu -->
-        <div class="cyber-modal" id="modal-box">
-            <div id="terminal-logs">
-                <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
-                <div class="log-line" id="log2"><span>> CONNECTING TO TAROT SECTOR...</span><span class="log-status">[96/T]</span></div>
-                <div class="log-line" id="log3"><span>> LOADING CARD DATABASE...</span><span class="log-status">[100%]</span></div>
-                <div class="log-line" id="log4"><span>> SECURING PORT CONNECTION...</span><span class="log-status">[OK]</span></div>
-                <div class="log-line" id="log5"><span>> FETCHING LINK SERVER STATUS...</span><span class="log-status">[...]</span></div>
-                <div class="log-line" id="log6"><span>> DETECTING LINK CHARGE CODES...</span><span class="log-status">[...]</span></div>
-            </div>
-
-            <!-- Videodaki Final Bağlantı Koptu Mesajı -->
-            <div class="system-standby-content" id="standby-screen">
-                <div class="standby-header">
-                    <span>⚠️ CONNECTION LOST // SYSTEM STANDBY</span>
-                </div>
-                <div class="standby-desc">
-                    Tarot servers are currently under active development. d3li has not opened its gates yet.
-                </div>
-                <button class="join-btn" onclick="window.open('https://discord.gg/d3licom', '_blank')">JOIN COMMUNITY</button>
-            </div>
+        <div class="cyber-static-panel">
+            <div class="log-line"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
+            <div class="log-line"><span>> Loading Tarot Engine...</span><span class="log-status">[100%]</span></div>
+            <div class="log-line"><span>> Loading 22 Tarot Cards...</span><span class="log-status">[100%]</span></div>
+            <div class="log-line"><span>> Establishing Connection...</span><span class="log-status">[...]</span></div>
         </div>
+
+        <div class="system-standby-content" id="standby-screen">
+            <div class="standby-header">⚠️ CONNECTION LOST // SYSTEM STANDBY</div>
+            <div class="standby-desc">Tarot servers are currently under active development. d3li has not opened its gates yet.</div>
+            <button class="join-btn" onclick="window.open('https://discord.gg/d3licom', '_blank')">JOIN COMMUNITY</button>
+        </div>
+
     </div>
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            const statusNum = document.getElementById('status-num');
-            const progressNum = document.getElementById('progress-num');
-            const fillBar = document.getElementById('fill-bar');
             const standbyScreen = document.getElementById('standby-screen');
-            const terminalLogs = document.getElementById('terminal-logs');
-            const modalBox = document.getElementById('modal-box');
 
-            let currentPercent = 0;
-            const targetPercent = 87;
-            const duration = 2400; 
-            const intervalTime = duration / targetPercent;
-
-            // Logların tek tek ekrana gelme zamanlaması
-            setTimeout(() => { document.getElementById('log1').style.display = 'flex'; }, 300);
-            setTimeout(() => { document.getElementById('log2').style.display = 'flex'; }, 700);
-            setTimeout(() => { document.getElementById('log3').style.display = 'flex'; }, 1100);
-            setTimeout(() => { document.getElementById('log4').style.display = 'flex'; }, 1500);
-            setTimeout(() => { document.getElementById('log5').style.display = 'flex'; }, 1900);
-            setTimeout(() => { document.getElementById('log6').style.display = 'flex'; }, 2200);
-
-            // Sayaç döngüsü
-            const interval = setInterval(() => {
-                if (currentPercent >= targetPercent) {
-                    clearInterval(interval);
-                    
-                    // Tam videodaki gibi %87 olunca loglar kayboluyor ve uyarı kutusu geliyor
-                    setTimeout(() => {
-                        terminalLogs.style.display = 'none';
-                        modalBox.style.borderColor = '#ffcc00'; // Çerçeve rengi sarıya dönüyor
-                        standbyScreen.style.display = 'block';
-                    }, 400);
-                } else {
-                    currentPercent++;
-                    statusNum.textContent = currentPercent + '%';
-                    progressNum.textContent = currentPercent + '%';
-                    fillBar.style.width = currentPercent + '%';
-                }
-            }, intervalTime);
+            // Sayfa yüklendikten 800ms sonra sarı pop-up hareketli bir efektle ekranda patlar
+            setTimeout(() => {
+                standbyScreen.style.display = 'block';
+            }, 800);
         });
     </script>
 </body>
