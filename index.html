@@ -35,7 +35,6 @@
             background-position: center;
         }
 
-        /* Sol Alt Büyük Sayaç Maskesi */
         .system-status-mask {
             position: absolute;
             bottom: 25.5%; 
@@ -58,7 +57,6 @@
             line-height: 1;
         }
 
-        /* Alt Progress Bar */
         .progress-mask-container {
             position: absolute;
             bottom: 18.2%; 
@@ -79,7 +77,6 @@
             transition: width 0.04s linear;
         }
 
-        /* Sağdaki Küçük Sayaç Maskesi */
         .progress-percentage-mask {
             position: absolute;
             bottom: 17.5%;
@@ -99,7 +96,6 @@
             font-family: 'Arial Black', sans-serif;
         }
 
-        /* Ortadaki Dinamik Terminal & Pop-up Paneli */
         .cyber-modal {
             position: absolute;
             top: 48%;
@@ -120,7 +116,6 @@
             z-index: 10;
         }
 
-        /* Satır satır akan loglar */
         .log-line {
             color: #39ff14;
             font-size: 0.95vw;
@@ -135,7 +130,6 @@
             font-weight: bold;
         }
 
-        /* Final Uyarı Ekranı Tasarımı (Videodakiyle Birebir) */
         .system-standby-content {
             display: none;
             text-align: center;
@@ -200,22 +194,18 @@
 <body>
 
     <div class="wrapper">
-        <!-- Sol alt yüzdelik maske -->
         <div class="system-status-mask">
             <div class="system-status-percentage" id="status-num">0%</div>
         </div>
 
-        <!-- İlerleme barı -->
         <div class="progress-mask-container">
             <div class="progress-bar" id="fill-bar"></div>
         </div>
 
-        <!-- Sağdaki küçük yüzdelik maske -->
         <div class="progress-percentage-mask">
             <div class="progress-percentage" id="progress-num">0%</div>
         </div>
 
-        <!-- Ortadaki Akıllı Terminal Kutusu -->
         <div class="cyber-modal" id="modal-box">
             <div id="terminal-logs">
                 <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
@@ -226,7 +216,6 @@
                 <div class="log-line" id="log6"><span>> DETECTING LINK CHARGE CODES...</span><span class="log-status">[...]</span></div>
             </div>
 
-            <!-- Videodaki Final Bağlantı Koptu Mesajı -->
             <div class="system-standby-content" id="standby-screen">
                 <div class="standby-header">
                     <span>⚠️ CONNECTION LOST // SYSTEM STANDBY</span>
@@ -253,7 +242,6 @@
             const duration = 2400; 
             const intervalTime = duration / targetPercent;
 
-            // Logların tek tek ekrana gelme zamanlaması
             setTimeout(() => { document.getElementById('log1').style.display = 'flex'; }, 300);
             setTimeout(() => { document.getElementById('log2').style.display = 'flex'; }, 700);
             setTimeout(() => { document.getElementById('log3').style.display = 'flex'; }, 1100);
@@ -261,15 +249,13 @@
             setTimeout(() => { document.getElementById('log5').style.display = 'flex'; }, 1900);
             setTimeout(() => { document.getElementById('log6').style.display = 'flex'; }, 2200);
 
-            // Sayaç döngüsü
             const interval = setInterval(() => {
                 if (currentPercent >= targetPercent) {
                     clearInterval(interval);
                     
-                    // Tam videodaki gibi %87 olunca loglar kayboluyor ve uyarı kutusu geliyor
                     setTimeout(() => {
                         terminalLogs.style.display = 'none';
-                        modalBox.style.borderColor = '#ffcc00'; // Çerçeve rengi sarıya dönüyor
+                        modalBox.style.borderColor = '#ffcc00'; 
                         standbyScreen.style.display = 'block';
                     }, 400);
                 } else {
