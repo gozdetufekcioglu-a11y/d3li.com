@@ -22,7 +22,7 @@
             align-items: center;
         }
 
-        /* Orijinal Görseli Merkeze Alan Ana Ekran */
+        /* Arka plan görselini ekrana tam oturtan ana çerçeve */
         .wrapper {
             position: relative;
             width: 100vw;
@@ -36,7 +36,7 @@
             background-position: center;
         }
 
-        /* Sol Alt Büyük %87 Sayacı */
+        /* Sol Alt Büyük %87 Sayacı Maskesi */
         .system-status-mask {
             position: absolute;
             bottom: 25.5%; 
@@ -96,7 +96,7 @@
             font-family: 'Arial Black', sans-serif;
         }
 
-        /* Sol Ortadaki Yeşil Terminal Alanı (Yalnızca Loglar İçin) */
+        /* Sol Ortadaki Yeşil Terminal Alanı (Loglar için) */
         .cyber-terminal {
             position: absolute;
             bottom: 24.5%;
@@ -125,37 +125,36 @@
             font-weight: bold;
         }
 
-        /* [KRİTİK DÜZELTME] Pop-up Artık Ekranın Tam Ortasında Bağımsız */
+        /* SARI POP-UP: Diğer her şeyden bağımsız olarak tam merkeze kilitlendi */
         .system-standby-content {
             display: none;
             text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Tam merkezleme */
-            width: 32vw;
-            max-width: 480px;
-            background-color: rgba(5, 12, 5, 0.98);
-            border: 2px solid #ffcc00;
-            padding: 25px;
-            box-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
+            position: fixed; 
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 450px !important;
+            max-width: 90vw;
+            background-color: #050c05 !important;
+            border: 2px solid #ffcc00 !important;
+            padding: 25px !important;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.4) !important;
             border-radius: 4px;
-            z-index: 999; /* En üstte durması için */
-            animation: fadeIn 0.4s ease-in-out forwards;
+            z-index: 99999 !important;
             font-family: 'Courier New', Courier, monospace;
         }
 
         .standby-header {
             color: #ffcc00;
             font-weight: bold;
-            font-size: 1.1vw;
+            font-size: 16px;
             letter-spacing: 1px;
             margin-bottom: 12px;
         }
 
         .standby-desc {
             color: #88af88;
-            font-size: 0.85vw;
+            font-size: 13px;
             line-height: 1.4;
             margin-bottom: 18px;
         }
@@ -166,7 +165,7 @@
             color: #39ff14;
             padding: 8px 22px;
             font-family: inherit;
-            font-size: 0.8vw;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
@@ -179,40 +178,30 @@
             box-shadow: 0 0 15px #39ff14;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         @media (min-width: 1536px) {
             .system-status-percentage { font-size: 54px; }
             .progress-percentage { font-size: 20px; }
             .log-line { font-size: 14px; }
-            .standby-header { font-size: 16px; }
-            .standby-desc { font-size: 13px; }
-            .join-btn { font-size: 13px; }
         }
     </style>
 </head>
 <body>
 
     <div class="wrapper">
-        <!-- Büyük %87 Maskesi -->
+        <!-- Sayaç Maskeleri -->
         <div class="system-status-mask">
             <div class="system-status-percentage" id="status-num">0%</div>
         </div>
 
-        <!-- Progress Bar Dolgusu -->
         <div class="progress-mask-container">
             <div class="progress-bar" id="fill-bar"></div>
         </div>
 
-        <!-- Küçük Yüzde Maskesi -->
         <div class="progress-percentage-mask">
             <div class="progress-percentage" id="progress-num">0%</div>
         </div>
 
-        <!-- Sol Alt Terminal Log Alanı -->
+        <!-- Terminal Logları -->
         <div class="cyber-terminal">
             <div id="terminal-logs">
                 <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
@@ -222,7 +211,7 @@
             </div>
         </div>
 
-        <!-- Ekranın Tam Ortasında Açılacak Sarı Pop-up -->
+        <!-- Bağımsız Sarı Pop-up -->
         <div class="system-standby-content" id="standby-screen">
             <div class="standby-header">⚠️ CONNECTION LOST // SYSTEM STANDBY</div>
             <div class="standby-desc">Tarot servers are currently under active development. d3li has not opened its gates yet.</div>
@@ -242,18 +231,18 @@
             const duration = 2400; 
             const intervalTime = duration / targetPercent;
 
-            // Logların sırayla akması
+            // Log Akış Zamanlaması
             setTimeout(() => { document.getElementById('log1').style.display = 'flex'; }, 300);
             setTimeout(() => { document.getElementById('log2').style.display = 'flex'; }, 800);
             setTimeout(() => { document.getElementById('log3').style.display = 'flex'; }, 1400);
             setTimeout(() => { document.getElementById('log4').style.display = 'flex'; }, 1900);
 
-            // Sayaç döngüsü
+            // %87 Sayacı
             const interval = setInterval(() => {
                 if (currentPercent >= targetPercent) {
                     clearInterval(interval);
-                    // %87'de çakılınca bağımsız pop-up ortada belirir
                     setTimeout(() => {
+                        // Pop-up artık log kutusundan bağımsız, ekranın tam ortasında açılır
                         standbyScreen.style.display = 'block';
                     }, 500);
                 } else {
