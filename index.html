@@ -23,12 +23,12 @@
             align-items: center;
         }
 
-        /* [MOBİL UYGULAMA KASASI] Telefon ekranları için dikey oran kilitli alan */
+        /* [MOBİL KASA] Sadece arka plan görselini dikey ekrana oturtan alan */
         .phone-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            max-width: 480px; /* Standart üst seviye mobil genişlik sınırı */
+            max-width: 480px; 
             max-height: 920px;
             background-image: url('bg.jpeg'); 
             background-size: cover;
@@ -38,105 +38,14 @@
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
         }
 
-        /* Sabit Büyük %87 Sayacı */
-        .system-status-mask {
-            position: absolute;
-            bottom: 25.5%; 
-            left: 33.5%;
-            width: 12%;
-            height: 6%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            z-index: 6;
-        }
-
-        .system-status-percentage {
-            font-size: 5.5vw;
-            font-weight: 900;
-            color: #39ff14;
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.8);
-            font-family: 'Arial Black', sans-serif;
-            letter-spacing: -1px;
-            line-height: 1;
-        }
-
-        /* Sabit Alt Progress Bar */
-        .progress-mask-container {
-            position: absolute;
-            bottom: 18.5%; 
-            left: 6%;
-            width: 32.5%; 
-            height: 1.2vh;
-            overflow: hidden;
-            z-index: 6;
-        }
-
-        .progress-bar {
-            width: 87%; /* Sayaç doğrudan %87'de sabit */
-            height: 100%;
-            background: linear-gradient(90deg, #103f10, #39ff14);
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.9);
-        }
-
-        /* Sabit Sağdaki Küçük Yüzde */
-        .progress-percentage-mask {
-            position: absolute;
-            bottom: 17.8%;
-            left: 44.5%;
-            width: 6%;
-            height: 2.5%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            z-index: 6;
-        }
-
-        .progress-percentage {
-            color: #39ff14;
-            font-size: 2.2vw;
-            font-weight: bold;
-            font-family: 'Arial Black', sans-serif;
-        }
-
-        /* Orijinal Çerçevenin İçine Oturan Sabit Terminal */
-        .cyber-static-panel {
-            position: absolute;
-            bottom: 24.5%;
-            left: 6%;
-            width: 38%;
-            height: 25%;
-            padding: 8px;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-flex-direction: column;
-            justify-content: flex-start;
-            z-index: 5;
-        }
-
-        /* Log Satırları (Doğrudan görünür ve sabit) */
-        .log-line {
-            color: #39ff14;
-            font-size: 1.5vw;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .log-status {
-            font-weight: bold;
-        }
-
-        /* [HAREKETLİ POP-UP] Telefondaki çerçevenin tam ortasından büyüyerek açılan efekt */
+        /* [HAREKETLİ POP-UP] Ekranın tam ortasında, hafif küçülerek açılan estetik siber kutu */
         .system-standby-content {
             display: none;
             text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.7); /* Başlangıçta küçük */
+            transform: translate(-50%, -50%) scale(0.7); 
             width: 88vw;
             max-width: 380px;
             background-color: rgba(5, 12, 5, 0.98); 
@@ -147,13 +56,13 @@
             z-index: 99999;
             font-family: 'Courier New', Courier, monospace;
             opacity: 0;
-            animation: popUpEntrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; /* Siber akıcı açılış */
+            animation: popUpEntrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
         }
 
         .standby-header {
             color: #ffcc00;
             font-weight: bold;
-            font-size: 3.8vw;
+            font-size: 16px;
             letter-spacing: 0.5px;
             margin-bottom: 12px;
             text-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
@@ -161,7 +70,7 @@
 
         .standby-desc {
             color: #88af88;
-            font-size: 2.8vw;
+            font-size: 12px;
             line-height: 1.4;
             margin-bottom: 20px;
         }
@@ -172,7 +81,7 @@
             color: #39ff14;
             padding: 10px 24px;
             font-family: inherit;
-            font-size: 3vw;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
@@ -186,47 +95,18 @@
             box-shadow: 0 0 15px #39ff14;
         }
 
-        /* Giriş Animasyon Efekti */
+        /* Pop-up Giriş Animasyonu */
         @keyframes popUpEntrance {
             to {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1); /* Tam boyutuna esneyerek gelir */
+                transform: translate(-50%, -50%) scale(1); 
             }
-        }
-
-        /* Masaüstü Ekranlarında Mobil Görünümü Korumak İçin Font Oranlaması */
-        @media (min-width: 480px) {
-            .system-status-percentage { font-size: 24px; }
-            .progress-percentage { font-size: 11px; }
-            .log-line { font-size: 8px; }
-            .standby-header { font-size: 16px; }
-            .standby-desc { font-size: 12px; }
-            .join-btn { font-size: 13px; }
         }
     </style>
 </head>
 <body>
 
     <div class="phone-container">
-        
-        <div class="system-status-mask">
-            <div class="system-status-percentage">87%</div>
-        </div>
-
-        <div class="progress-mask-container">
-            <div class="progress-bar"></div>
-        </div>
-
-        <div class="progress-percentage-mask">
-            <div class="progress-percentage">87%</div>
-        </div>
-
-        <div class="cyber-static-panel">
-            <div class="log-line"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
-            <div class="log-line"><span>> Loading Tarot Engine...</span><span class="log-status">[100%]</span></div>
-            <div class="log-line"><span>> Loading 22 Tarot Cards...</span><span class="log-status">[100%]</span></div>
-            <div class="log-line"><span>> Establishing Connection...</span><span class="log-status">[...]</span></div>
-        </div>
 
         <div class="system-standby-content" id="standby-screen">
             <div class="standby-header">⚠️ CONNECTION LOST // SYSTEM STANDBY</div>
@@ -240,10 +120,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             const standbyScreen = document.getElementById('standby-screen');
 
-            // Sayfa yüklendikten 800ms sonra sarı pop-up hareketli bir efektle ekranda patlar
+            // Sayfa açıldıktan 600ms sonra sarı kutu ekranın tam ortasında pürüzsüzce açılır
             setTimeout(() => {
                 standbyScreen.style.display = 'block';
-            }, 800);
+            }, 600);
         });
     </script>
 </body>
