@@ -1,1 +1,10 @@
-
+{
+    "name": "d3li Tarot Game",
+    "short_name": "d3li",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "description": "d3li Online Tarot Game",
+    "orientation": "portrait"
+}
