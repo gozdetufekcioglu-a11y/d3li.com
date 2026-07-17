@@ -22,6 +22,7 @@
             align-items: center;
         }
 
+        /* [KAYMA ENGELLEYİCİ] Görselin oranını kilitleyen ve ekrana göre esneyen ana kasa */
         .wrapper {
             position: relative;
             width: 100vw;
@@ -30,7 +31,7 @@
             max-height: 1024px;
             aspect-ratio: 1536 / 1024;
             background-image: url('bg.jpeg'); 
-            background-size: cover;
+            background-size: contain; /* cover yerine contain yapılarak görselin kırpılması engellendi */
             background-repeat: no-repeat;
             background-position: center;
         }
@@ -98,14 +99,14 @@
             font-family: 'Arial Black', sans-serif;
         }
 
-        /* [MİLİMETRİK AYAR] Orijinal Çerçevenin Sınırlarına Tam Oturan Panel */
+        /* Orijinal Çerçevenin Sınırlarına Sabitlenmiş Dinamik Alan */
         .cyber-dynamic-panel {
             position: absolute;
-            bottom: 24.1%; /* 24.5'ten milimetrik aşağı çekildi */
-            left: 5.7%;    /* 5.9'dan milimetrik sola çekildi */
-            width: 38.3%;  /* Çerçeveyi tam kaplaması için hafif genişletildi */
-            height: 25.9%; /* Tam oturması için yüksekliği dengelendi */
-            padding: 0;    /* İç dolgu sıfırlandı, kutu tam sıfıra sıfır oturacak */
+            bottom: 24.3%; /* Alt sınır tam oturtuldu */
+            left: 5.9%;    /* Sol sınır tam hizalandı */
+            width: 38.0%;  /* Sağ sınır tam çizgiye sıfırlandı */
+            height: 25.7%; /* Üst sınır tam olarak yeşil çerçeveye bağlandı */
+            padding: 0;
             font-family: 'Courier New', Courier, monospace;
             display: flex;
             flex-direction: column;
@@ -131,14 +132,14 @@
             font-weight: bold;
         }
 
-        /* VİDEODAKİ SARI POP-UP: Çerçevenin sınırlarına tam sıfıra sıfır oturur */
+        /* SARI POP-UP: Artık çerçevenin dış hatlarına tamamen sıfıra sıfır yapışır */
         .system-standby-content {
             display: none;
             text-align: center;
             width: 100%;
             height: 100%;
-            background-color: #050c05; /* Alttaki çakışan yazıları tamamen kapatır */
-            border: 2px solid #ffcc00;  /* Orijinal sarı çerçeve */
+            background-color: #050c05; 
+            border: 2px solid #ffcc00;  
             padding: 25px 15px;
             animation: fadeIn 0.4s ease-in-out forwards;
         }
@@ -183,6 +184,7 @@
             to { opacity: 1; }
         }
 
+        /* Büyük Ekranlar İçin font stabilizasyonu */
         @media (min-width: 1536px) {
             .system-status-percentage { font-size: 54px; }
             .progress-percentage { font-size: 20px; }
@@ -196,7 +198,6 @@
 <body>
 
     <div class="wrapper">
-        <!-- Canlı Sayaçlar -->
         <div class="system-status-mask">
             <div class="system-status-percentage" id="status-num">0%</div>
         </div>
@@ -209,10 +210,8 @@
             <div class="progress-percentage" id="progress-num">0%</div>
         </div>
 
-        <!-- Orijinal Çerçevenin İçindeki Milimetrik Dinamik Alan -->
         <div class="cyber-dynamic-panel">
             
-            <!-- Canlı Akacak Terminal Logları -->
             <div id="terminal-logs">
                 <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
                 <div class="log-line" id="log2"><span>> Loading Tarot Engine...</span><span class="log-status">[100%]</span></div>
@@ -220,7 +219,6 @@
                 <div class="log-line" id="log4"><span>> Establishing Connection...</span><span class="log-status">[...]</span></div>
             </div>
 
-            <!-- %87 Olunca Çerçevenin Sınırlarına Tam Oturacak Sarı Pop-up -->
             <div class="system-standby-content" id="standby-screen">
                 <div class="standby-header">⚠️ CONNECTION LOST // SYSTEM STANDBY</div>
                 <div class="standby-desc">Tarot servers are currently under active development. d3li has not opened its gates yet.</div>
@@ -243,18 +241,14 @@
             const duration = 2400; 
             const intervalTime = duration / targetPercent;
 
-            // Log Zamanlamaları
             setTimeout(() => { document.getElementById('log1').style.display = 'flex'; }, 300);
             setTimeout(() => { document.getElementById('log2').style.display = 'flex'; }, 800);
             setTimeout(() => { document.getElementById('log3').style.display = 'flex'; }, 1400);
             setTimeout(() => { document.getElementById('log4').style.display = 'flex'; }, 1900);
 
-            // Sayaç Döngüsü
             const interval = setInterval(() => {
                 if (currentPercent >= targetPercent) {
                     clearInterval(interval);
-                    
-                    // %87'de eski logları sil ve sarı pop-up'ı çerçevenin içine sıfıra sıfır yerleştir
                     setTimeout(() => {
                         terminalLogs.style.display = 'none';
                         standbyScreen.style.display = 'block';
