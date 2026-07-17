@@ -35,10 +35,74 @@
             background-position: center;
         }
 
-        /* [DÜZELTME] Kutu dikeyde %48'den %40'a çekilerek alt taraftaki orijinal loading alanının tamamen önü açıldı */
+        /* Sol Alt Büyük Sayaç Maskesi */
+        .system-status-mask {
+            position: absolute;
+            bottom: 25.5%; 
+            left: 33.5%;
+            width: 10%;
+            height: 9%;
+            background-color: #050b05;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .system-status-percentage {
+            font-size: 3.5vw;
+            font-weight: 900;
+            color: #39ff14;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+            font-family: 'Arial Black', sans-serif;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        /* Alt Progress Bar */
+        .progress-mask-container {
+            position: absolute;
+            bottom: 18.2%; 
+            left: 5.9%;
+            width: 32.7%; 
+            height: 1.8vh;
+            max-height: 18px;
+            background-color: #040904;
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #103f10, #39ff14);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.9);
+            transition: width 0.04s linear;
+        }
+
+        /* Sağdaki Küçük Sayaç Maskesi */
+        .progress-percentage-mask {
+            position: absolute;
+            bottom: 17.5%;
+            left: 44.1%;
+            width: 4%;
+            height: 3%;
+            background-color: #030403;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .progress-percentage {
+            color: #39ff14;
+            font-size: 1.3vw;
+            font-weight: bold;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        /* Ortadaki Dinamik Terminal & Pop-up Paneli */
         .cyber-modal {
             position: absolute;
-            top: 40%;
+            top: 48%;
             left: 54%;
             transform: translate(-50%, -50%);
             width: 30vw;
@@ -71,7 +135,7 @@
             font-weight: bold;
         }
 
-        /* Final Uyarı Ekranı Tasarımı */
+        /* Final Uyarı Ekranı Tasarımı (Videodakiyle Birebir) */
         .system-standby-content {
             display: none;
             text-align: center;
@@ -124,6 +188,8 @@
         }
 
         @media (min-width: 1536px) {
+            .system-status-percentage { font-size: 54px; }
+            .progress-percentage { font-size: 20px; }
             .log-line { font-size: 14px; }
             .standby-header { font-size: 16px; }
             .standby-desc { font-size: 13px; }
@@ -134,6 +200,22 @@
 <body>
 
     <div class="wrapper">
+        <!-- Sol alt yüzdelik maske -->
+        <div class="system-status-mask">
+            <div class="system-status-percentage" id="status-num">0%</div>
+        </div>
+
+        <!-- İlerleme barı -->
+        <div class="progress-mask-container">
+            <div class="progress-bar" id="fill-bar"></div>
+        </div>
+
+        <!-- Sağdaki küçük yüzdelik maske -->
+        <div class="progress-percentage-mask">
+            <div class="progress-percentage" id="progress-num">0%</div>
+        </div>
+
+        <!-- Ortadaki Akıllı Terminal Kutusu -->
         <div class="cyber-modal" id="modal-box">
             <div id="terminal-logs">
                 <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
@@ -144,6 +226,7 @@
                 <div class="log-line" id="log6"><span>> DETECTING LINK CHARGE CODES...</span><span class="log-status">[...]</span></div>
             </div>
 
+            <!-- Videodaki Final Bağlantı Koptu Mesajı -->
             <div class="system-standby-content" id="standby-screen">
                 <div class="standby-header">
                     <span>⚠️ CONNECTION LOST // SYSTEM STANDBY</span>
@@ -158,6 +241,9 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
+            const statusNum = document.getElementById('status-num');
+            const progressNum = document.getElementById('progress-num');
+            const fillBar = document.getElementById('fill-bar');
             const standbyScreen = document.getElementById('standby-screen');
             const terminalLogs = document.getElementById('terminal-logs');
             const modalBox = document.getElementById('modal-box');
@@ -175,10 +261,12 @@
             setTimeout(() => { document.getElementById('log5').style.display = 'flex'; }, 1900);
             setTimeout(() => { document.getElementById('log6').style.display = 'flex'; }, 2200);
 
+            // Sayaç döngüsü
             const interval = setInterval(() => {
                 if (currentPercent >= targetPercent) {
                     clearInterval(interval);
                     
+                    // Tam videodaki gibi %87 olunca loglar kayboluyor ve uyarı kutusu geliyor
                     setTimeout(() => {
                         terminalLogs.style.display = 'none';
                         modalBox.style.borderColor = '#ffcc00'; // Çerçeve rengi sarıya dönüyor
@@ -186,6 +274,9 @@
                     }, 400);
                 } else {
                     currentPercent++;
+                    statusNum.textContent = currentPercent + '%';
+                    progressNum.textContent = currentPercent + '%';
+                    fillBar.style.width = currentPercent + '%';
                 }
             }, intervalTime);
         });
