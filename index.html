@@ -35,10 +35,10 @@
             background-position: center;
         }
 
-        /* Ortadaki Akıllı Terminal & Pop-up Paneli */
+        /* [DÜZELTME] Kutu dikeyde %48'den %40'a çekilerek alt taraftaki orijinal loading alanının tamamen önü açıldı */
         .cyber-modal {
             position: absolute;
-            top: 48%;
+            top: 40%;
             left: 54%;
             transform: translate(-50%, -50%);
             width: 30vw;
@@ -134,7 +134,6 @@
 <body>
 
     <div class="wrapper">
-        <!-- Ortadaki Akıllı Terminal Kutusu -->
         <div class="cyber-modal" id="modal-box">
             <div id="terminal-logs">
                 <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
@@ -145,7 +144,6 @@
                 <div class="log-line" id="log6"><span>> DETECTING LINK CHARGE CODES...</span><span class="log-status">[...]</span></div>
             </div>
 
-            <!-- Final Bağlantı Koptu Mesajı -->
             <div class="system-standby-content" id="standby-screen">
                 <div class="standby-header">
                     <span>⚠️ CONNECTION LOST // SYSTEM STANDBY</span>
@@ -177,12 +175,10 @@
             setTimeout(() => { document.getElementById('log5').style.display = 'flex'; }, 1900);
             setTimeout(() => { document.getElementById('log6').style.display = 'flex'; }, 2200);
 
-            // Arka plandaki sayaç mantığıyla senkronize sanal zamanlayıcı
             const interval = setInterval(() => {
                 if (currentPercent >= targetPercent) {
                     clearInterval(interval);
                     
-                    // %87 simülasyonu bitince loglar kayboluyor ve uyarı kutusu geliyor
                     setTimeout(() => {
                         terminalLogs.style.display = 'none';
                         modalBox.style.borderColor = '#ffcc00'; // Çerçeve rengi sarıya dönüyor
