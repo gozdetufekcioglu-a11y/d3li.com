@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>d3li - Draw Your Card. Write Your Path.</title>
     <style>
         * {
@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body, html {
@@ -22,56 +23,45 @@
             align-items: center;
         }
 
-        .wrapper {
+        /* Dikey ekran kilitli konteyner */
+        .phone-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            max-width: 1536px;
-            max-height: 1024px;
-            aspect-ratio: 1536 / 1024;
+            /* Görselin en-boy oranını korumak için */
             background-image: url('bg.jpeg'); 
-            background-size: contain;
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
         }
 
-        /* Ortadaki Akıllı Terminal & Pop-up Paneli */
+        /* Sarı Pop-up kutusu (Artık mobilde tam ortada) */
         .cyber-modal {
             position: absolute;
-            top: 48%;
-            left: 54%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 30vw;
-            max-width: 460px;
-            min-height: 180px;
-            background-color: rgba(5, 12, 5, 0.95);
+            width: 85vw;
+            max-width: 400px;
+            background-color: rgba(5, 12, 5, 0.98);
             border: 2px solid #1f4d1f;
             padding: 20px;
             font-family: 'Courier New', Courier, monospace;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+            border-radius: 6px;
             z-index: 10;
         }
 
-        /* Satır satır akan loglar */
         .log-line {
             color: #39ff14;
-            font-size: 0.95vw;
-            margin-bottom: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            display: none;
+            font-size: 3.5vw;
+            margin-bottom: 8px;
+            display: flex;
             justify-content: space-between;
         }
 
-        .log-status {
-            font-weight: bold;
-        }
+        .log-status { font-weight: bold; }
 
-        /* Final Uyarı Ekranı Tasarımı */
         .system-standby-content {
             display: none;
             text-align: center;
@@ -81,20 +71,15 @@
         .standby-header {
             color: #ffcc00;
             font-weight: bold;
-            font-size: 1.1vw;
-            letter-spacing: 1px;
+            font-size: 4vw;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
         }
 
         .standby-desc {
             color: #88af88;
-            font-size: 0.85vw;
-            line-height: 1.5;
+            font-size: 3vw;
+            line-height: 1.4;
             margin-bottom: 20px;
         }
 
@@ -102,57 +87,30 @@
             background-color: transparent;
             border: 1px solid #39ff14;
             color: #39ff14;
-            padding: 10px 24px;
-            font-family: inherit;
-            font-size: 0.9vw;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 12px 20px;
+            font-size: 3.5vw;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            cursor: pointer;
         }
 
-        .join-btn:hover {
-            background-color: #39ff14;
-            color: #000;
-            box-shadow: 0 0 15px #39ff14;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @media (min-width: 1536px) {
-            .log-line { font-size: 14px; }
-            .standby-header { font-size: 16px; }
-            .standby-desc { font-size: 13px; }
-            .join-btn { font-size: 14px; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <!-- Ortadaki Akıllı Terminal Kutusu -->
+    <div class="phone-container">
+        <!-- Terminal kutusu, mobilde orta-üst kısımdadır -->
         <div class="cyber-modal" id="modal-box">
             <div id="terminal-logs">
-                <div class="log-line" id="log1"><span>> INITIALIZING d3li SYSTEM...</span><span class="log-status">[OK]</span></div>
-                <div class="log-line" id="log2"><span>> CONNECTING TO TAROT SECTOR...</span><span class="log-status">[96/T]</span></div>
-                <div class="log-line" id="log3"><span>> LOADING CARD DATABASE...</span><span class="log-status">[100%]</span></div>
-                <div class="log-line" id="log4"><span>> SECURING PORT CONNECTION...</span><span class="log-status">[OK]</span></div>
-                <div class="log-line" id="log5"><span>> FETCHING LINK SERVER STATUS...</span><span class="log-status">[...]</span></div>
-                <div class="log-line" id="log6"><span>> DETECTING LINK CHARGE CODES...</span><span class="log-status">[...]</span></div>
+                <div class="log-line" id="log1"><span>> INITIALIZING d3li...</span><span class="log-status">[OK]</span></div>
+                <div class="log-line" id="log2"><span>> CONNECTING...</span><span class="log-status">[96/T]</span></div>
+                <div class="log-line" id="log3"><span>> LOADING DATA...</span><span class="log-status">[100%]</span></div>
+                <div class="log-line" id="log4"><span>> SECURING PORT...</span><span class="log-status">[OK]</span></div>
             </div>
 
-            <!-- Final Bağlantı Koptu Mesajı -->
             <div class="system-standby-content" id="standby-screen">
-                <div class="standby-header">
-                    <span>⚠️ CONNECTION LOST // SYSTEM STANDBY</span>
-                </div>
-                <div class="standby-desc">
-                    Tarot servers are currently under active development. d3li has not opened its gates yet.
-                </div>
+                <div class="standby-header">⚠️ CONNECTION LOST</div>
+                <div class="standby-desc">Tarot servers are currently under active development. d3li has not opened its gates yet.</div>
                 <button class="join-btn" onclick="window.open('https://discord.gg/d3licom', '_blank')">JOIN COMMUNITY</button>
             </div>
         </div>
@@ -164,34 +122,16 @@
             const terminalLogs = document.getElementById('terminal-logs');
             const modalBox = document.getElementById('modal-box');
 
-            let currentPercent = 0;
-            const targetPercent = 87;
-            const duration = 2400; 
-            const intervalTime = duration / targetPercent;
-
-            // Logların tek tek ekrana gelme zamanlaması
             setTimeout(() => { document.getElementById('log1').style.display = 'flex'; }, 300);
             setTimeout(() => { document.getElementById('log2').style.display = 'flex'; }, 700);
             setTimeout(() => { document.getElementById('log3').style.display = 'flex'; }, 1100);
             setTimeout(() => { document.getElementById('log4').style.display = 'flex'; }, 1500);
-            setTimeout(() => { document.getElementById('log5').style.display = 'flex'; }, 1900);
-            setTimeout(() => { document.getElementById('log6').style.display = 'flex'; }, 2200);
 
-            // Arka plandaki sayaç mantığıyla senkronize sanal zamanlayıcı
-            const interval = setInterval(() => {
-                if (currentPercent >= targetPercent) {
-                    clearInterval(interval);
-                    
-                    // %87 simülasyonu bitince loglar kayboluyor ve uyarı kutusu geliyor
-                    setTimeout(() => {
-                        terminalLogs.style.display = 'none';
-                        modalBox.style.borderColor = '#ffcc00'; // Çerçeve rengi sarıya dönüyor
-                        standbyScreen.style.display = 'block';
-                    }, 400);
-                } else {
-                    currentPercent++;
-                }
-            }, intervalTime);
+            setTimeout(() => {
+                terminalLogs.style.display = 'none';
+                modalBox.style.borderColor = '#ffcc00';
+                standbyScreen.style.display = 'block';
+            }, 2500);
         });
     </script>
 </body>
