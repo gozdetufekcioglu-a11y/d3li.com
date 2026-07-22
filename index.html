@@ -1,374 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <title>D3LI | Coming Soon</title>
+
+  <meta
+    name="description"
+    content="D3LI is coming soon. Scan. Play. Survive."
+  >
+
+  <meta name="theme-color" content="#070707">
+
+  <meta property="og:title" content="D3LI">
+  <meta property="og:description" content="Scan. Play. Survive. Coming soon to the app.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://d3li.com/bg.jpeg">
+
+  <style>
+    :root {
+      --background: #070707;
+      --gold: #d7b46a;
+      --purple: #a66cff;
+      --soft-white: #eee8df;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--background);
+    }
+
+    body {
+      overflow-x: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Loading screen */
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        radial-gradient(
+          circle at center,
+          #18121f 0%,
+          #090909 45%,
+          #050505 100%
+        );
+
+      transition:
+        opacity 0.8s ease,
+        visibility 0.8s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .loader-logo {
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(48px, 9vw, 86px);
+      font-weight: 700;
+      letter-spacing: 12px;
+      line-height: 1;
+
+      text-shadow:
+        0 0 18px rgba(215, 180, 106, 0.24),
+        0 0 42px rgba(166, 108, 255, 0.16);
+
+      animation: logoPulse 1.7s ease-in-out infinite;
+    }
+
+    .loader-tagline {
+      margin-top: 22px;
 
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      color: var(--purple);
+      font-size: clamp(10px, 2vw, 13px);
+      font-weight: 700;
+      letter-spacing: clamp(4px, 1vw, 8px);
 
-<title>D3LI | Scan. Play. Survive.</title>
+      white-space: nowrap;
+    }
 
-<meta name="description" content="D3LI - Scan. Play. Survive. The Coffee Adventure Game." />
-<meta name="keywords" content="d3li, coffee game, tarot game, mobile game, qr game" />
-<meta name="author" content="D3LI" />
-<meta name="theme-color" content="#0f0f0f" />
+    .loader-line {
+      position: relative;
+
+      width: min(220px, 65vw);
+      height: 3px;
 
-<meta property="og:title" content="D3LI" />
-<meta property="og:description" content="Scan. Play. Survive." />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="home.jpg" />
+      margin-top: 34px;
 
-<link rel="icon" href="favicon.png">
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    .loader-line::after {
+      content: "";
 
-<style>
+      position: absolute;
+      inset: 0;
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+      width: 45%;
+      border-radius: inherit;
 
-html,body{
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--purple),
+        var(--gold),
+        transparent
+      );
 
-width:100%;
-height:100%;
+      animation: loadingLine 1.3s ease-in-out infinite;
+    }
 
-background:#090909;
+    .loader-status {
+      margin-top: 16px;
 
-font-family:'Inter',sans-serif;
+      color: rgba(238, 232, 223, 0.55);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+    }
 
-overflow:hidden;
+    @keyframes logoPulse {
+      0%,
+      100% {
+        opacity: 0.55;
+        transform: scale(0.98);
+      }
 
-}
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
 
-body{
+    @keyframes loadingLine {
+      from {
+        transform: translateX(-130%);
+      }
 
-display:flex;
-justify-content:center;
-align-items:center;
+      to {
+        transform: translateX(280%);
+      }
+    }
 
-}
+    /* Main page */
 
-/* Loading */
+    .app-preview {
+      position: relative;
 
-#loader{
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-position:fixed;
+      width: 100%;
+      min-height: 100svh;
 
-left:0;
-top:0;
+      padding: 18px;
 
-width:100%;
-height:100%;
+      overflow: hidden;
+      background: #050505;
+    }
 
-background:#090909;
+    .app-preview::before {
+      content: "";
 
-display:flex;
+      position: absolute;
+      inset: 0;
 
-justify-content:center;
-align-items:center;
+      background:
+        radial-gradient(
+          circle at 50% 25%,
+          rgba(117, 65, 177, 0.16),
+          transparent 38%
+        );
 
-flex-direction:column;
+      pointer-events: none;
+    }
 
-z-index:9999;
+    .game-artwork {
+      position: relative;
+      z-index: 1;
 
-transition:1s;
+      display: block;
 
-}
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: calc(100svh - 36px);
 
-.logo{
-
-font-family:'Cinzel',serif;
-
-font-size:58px;
-
-color:#d7b26a;
-
-letter-spacing:8px;
-
-animation:pulse 2s infinite;
-
-}
-
-.loading{
-
-margin-top:20px;
-
-font-size:14px;
-
-letter-spacing:4px;
-
-color:#888;
-
-}
-
-@keyframes pulse{
-
-0%{opacity:.4;}
-
-50%{opacity:1;}
-
-100%{opacity:.4;}
-
-}
-
-/* Main */
-
-main{
-
-position:relative;
-
-width:100vw;
-
-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-overflow:hidden;
-
-}
-
-/* Image */
-
-main img{
-
-width:100%;
-
-height:100%;
-
-object-fit:contain;
-
-user-select:none;
-
-pointer-events:none;
-
-animation:fade 2s;
-
-}
-
-@keyframes fade{
-
-from{
-
-opacity:0;
-transform:scale(1.03);
-
-}
-
-to{
-
-opacity:1;
-transform:scale(1);
-
-}
-
-}
-
-/* Top Logo */
-
-.title{
-
-position:absolute;
-
-top:35px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-font-family:'Cinzel',serif;
-
-font-size:54px;
-
-font-weight:bold;
-
-color:#d6b46d;
-
-letter-spacing:8px;
-
-text-shadow:
-
-0 0 20px rgba(255,208,120,.3);
-
-}
-
-/* Subtitle */
-
-.subtitle{
-
-position:absolute;
-
-top:105px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-font-size:14px;
-
-letter-spacing:8px;
-
-color:#b78cff;
-
-text-transform:uppercase;
-
-}
-
-/* Coming Soon */
-
-.coming{
-
-position:absolute;
-
-bottom:80px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-font-size:14px;
-
-letter-spacing:5px;
-
-color:#d8b26b;
-
-background:rgba(0,0,0,.45);
-
-padding:12px 28px;
-
-border:1px solid rgba(214,180,109,.35);
-
-backdrop-filter:blur(8px);
-
-border-radius:10px;
-
-}
-
-/* Footer */
-
-footer{
-
-position:absolute;
-
-bottom:20px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-font-size:12px;
-
-letter-spacing:2px;
-
-color:#666;
-
-}
-
-/* Responsive */
-
-@media(max-width:768px){
-
-.title{
-
-font-size:34px;
-
-letter-spacing:4px;
-
-}
-
-.subtitle{
-
-font-size:11px;
-
-letter-spacing:3px;
-
-top:82px;
-
-}
-
-.coming{
-
-font-size:12px;
-
-padding:10px 20px;
-
-}
-
-main img{
-
-object-fit:contain;
-
-}
-
-}
-
-</style>
-
+      object-fit: contain;
+
+      opacity: 0;
+      transform: scale(1.025);
+
+      filter:
+        drop-shadow(0 18px 50px rgba(0, 0, 0, 0.72));
+
+      transition:
+        opacity 1.1s ease,
+        transform 1.1s ease;
+    }
+
+    body.loaded .game-artwork {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .coming-soon {
+      position: fixed;
+      z-index: 10;
+
+      left: 50%;
+      bottom: max(22px, env(safe-area-inset-bottom));
+
+      width: min(540px, calc(100% - 32px));
+
+      padding: 16px 22px;
+
+      transform: translateX(-50%);
+
+      border: 1px solid rgba(215, 180, 106, 0.52);
+      border-radius: 14px;
+
+      background: rgba(8, 8, 9, 0.88);
+      backdrop-filter: blur(13px);
+      -webkit-backdrop-filter: blur(13px);
+
+      box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.62),
+        0 0 22px rgba(166, 108, 255, 0.09);
+
+      text-align: center;
+
+      opacity: 0;
+      transform:
+        translateX(-50%)
+        translateY(18px);
+
+      transition:
+        opacity 0.9s ease 0.3s,
+        transform 0.9s ease 0.3s;
+    }
+
+    body.loaded .coming-soon {
+      opacity: 1;
+
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+    .coming-soon-title {
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(15px, 3vw, 20px);
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+
+    .coming-soon-text {
+      margin-top: 7px;
+
+      color: var(--soft-white);
+      font-size: clamp(11px, 2vw, 14px);
+      line-height: 1.45;
+      letter-spacing: 0.4px;
+    }
+
+    .coming-soon-tagline {
+      margin-top: 9px;
+
+      color: var(--purple);
+      font-size: clamp(9px, 1.8vw, 11px);
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+
+    @media (max-width: 600px) {
+      .app-preview {
+        padding:
+          10px
+          10px
+          calc(132px + env(safe-area-inset-bottom));
+      }
+
+      .game-artwork {
+        max-height:
+          calc(
+            100svh -
+            152px -
+            env(safe-area-inset-bottom)
+          );
+      }
+
+      .coming-soon {
+        padding: 14px 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div id="loader" aria-label="Loading D3LI">
+    <div class="loader-content">
+      <div class="loader-logo">D3LI</div>
 
-<div id="loader">
+      <div class="loader-tagline">
+        SCAN • PLAY • SURVIVE
+      </div>
 
-<div class="logo">
-d3li
-</div>
+      <div class="loader-line"></div>
 
-<div class="loading">
-LOADING...
-</div>
+      <div class="loader-status">
+        ENTERING THE WORLD...
+      </div>
+    </div>
+  </div>
 
-</div>
+  <main class="app-preview">
+    <img
+      id="gameArtwork"
+      class="game-artwork"
+      src="bg.jpeg"
+      alt="D3LI mobile game preview"
+    >
 
-<main>
+    <section class="coming-soon">
+      <h1 class="coming-soon-title">
+        YOUR JOURNEY BEGINS SOON
+      </h1>
 
-<div class="title">
-D3LI
-</div>
+      <p class="coming-soon-text">
+        The full D3LI game experience will soon be available in the app.
+      </p>
 
-<div class="subtitle">
-SCAN • PLAY • SURVIVE
-</div>
+      <p class="coming-soon-tagline">
+        SCAN • PLAY • SURVIVE
+      </p>
+    </section>
+  </main>
 
-<img src="home.jpg" alt="D3LI Game">
+  <script>
+    const loader = document.getElementById("loader");
+    const artwork = document.getElementById("gameArtwork");
 
-<div class="coming">
-COMING SOON
-</div>
+    function showPage() {
+      document.body.classList.add("loaded");
 
-<footer>
+      setTimeout(() => {
+        loader.classList.add("hidden");
+      }, 250);
+    }
 
-© 2026 D3LI
+    function handleArtworkError() {
+      console.error(
+        "The image bg.jpeg could not be loaded. " +
+        "Make sure bg.jpeg is in the same folder as index.html."
+      );
 
-</footer>
+      loader.querySelector(".loader-status").textContent =
+        "ARTWORK COULD NOT BE LOADED";
+    }
 
-</main>
+    artwork.addEventListener("load", () => {
+      setTimeout(showPage, 1600);
+    });
 
-<script>
+    artwork.addEventListener(
+      "error",
+      handleArtworkError
+    );
 
-window.onload=function(){
+    if (artwork.complete && artwork.naturalWidth > 0) {
+      setTimeout(showPage, 1600);
+    }
 
-setTimeout(function(){
-
-document.getElementById("loader").style.opacity="0";
-
-setTimeout(function(){
-
-document.getElementById("loader").style.display="none";
-
-},900);
-
-},1800);
-
-}
-
-</script>
-
+    window.setTimeout(() => {
+      if (!document.body.classList.contains("loaded")) {
+        showPage();
+      }
+    }, 4500);
+  </script>
 </body>
 </html>
